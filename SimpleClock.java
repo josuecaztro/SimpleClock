@@ -7,7 +7,7 @@ import java.util.Calendar;
 
 
 public class SimpleClock extends JFrame {
-    
+    //Josue
         Calendar calendar;
         SimpleDateFormat timeFormat;
         SimpleDateFormat dayFormat;
