@@ -1,12 +1,17 @@
 //package SimpleClock;
 
+import com.sun.tools.javac.Main;
+
 import javax.swing.*;
 import java.awt.*;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 
-public class SimpleClock extends JFrame {
+public class SimpleClock extends JFrame implements Runnable{
+    static volatile boolean conditional = true;
+
+
     //Josue
         Calendar calendar;
         SimpleDateFormat timeFormat;
@@ -49,26 +54,44 @@ public class SimpleClock extends JFrame {
     
             setTimer();
         }
-    
+
         public void setTimer() {
-            while (true) {
+
+                run();
+//            while (true) {
+//
+//            }
+        }
+
+
+
+        public static void main(String[] args) {
+//            new SimpleClock();
+            SimpleClock clock = new SimpleClock();
+            Thread thread = new Thread(clock);
+            thread.start();
+        }
+
+
+    @Override
+    public void run() {
+
+            do {
                 time = timeFormat.format(Calendar.getInstance().getTime());
                 timeLabel.setText(time);
-    
+
                 day = dayFormat.format(Calendar.getInstance().getTime());
                 dayLabel.setText(day);
-    
+
                 date = dateFormat.format(Calendar.getInstance().getTime());
                 dateLabel.setText(date);
-    
+
                 try {
                     Thread.sleep(1000);
                 } catch (Exception e) {
                     e.getStackTrace();
                 }
-            }
-        }
-        public static void main(String[] args) {
-            new SimpleClock();
-        }
+                System.out.println("Logic in while loop goes here.");
+            } while (conditional);
     }
+}
