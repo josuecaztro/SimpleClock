@@ -3,14 +3,19 @@
 import com.sun.tools.javac.Main;
 
 import javax.swing.*;
+import javax.swing.border.Border;
+import javax.swing.border.CompoundBorder;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 
-public class SimpleClock extends JFrame implements Runnable{
+public class SimpleClock extends JFrame implements Runnable, ActionListener {
     static volatile boolean conditional = true;
-
+    boolean hour24Format = false;
 
     //Josue
         Calendar calendar;
@@ -24,15 +29,36 @@ public class SimpleClock extends JFrame implements Runnable{
         String time;
         String day;
         String date;
+        //I coded below here.
+        JButton button1224 = new JButton("Switch 12/24HR");
+        JButton buttonTimeZone = new JButton("Toggle Time Zone");
+
+
+
 
         SimpleClock() {
             this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             this.setTitle("Digital Clock");
             this.setLayout(new FlowLayout());
-            this.setSize(350, 220);
-            this.setResizable(false);
-    
-            timeFormat = new SimpleDateFormat("hh:mm:ss a");
+            this.setSize(550, 250);
+            this.setResizable(true);
+
+            button1224.addActionListener(e -> {
+                System.out.println("You pressed me.");
+                hour24Format = !hour24Format; // Toggle the format
+
+                if (hour24Format) {
+                    timeFormat = new SimpleDateFormat("kk:mm:ss a"); // 24-hour format
+                } else {
+                    timeFormat = new SimpleDateFormat("hh:mm:ss a"); // 12-hour format
+                }
+            });
+
+            if (hour24Format) {
+                timeFormat = new SimpleDateFormat("kk:mm:ss a"); // 24-hour format
+            } else {
+                timeFormat = new SimpleDateFormat("hh:mm:ss a"); // 12-hour format
+            }
             dayFormat=new SimpleDateFormat("EEEE");
             dateFormat=new SimpleDateFormat("dd MMMMM, yyyy");
             timeLabel = new JLabel();
@@ -45,11 +71,25 @@ public class SimpleClock extends JFrame implements Runnable{
     
             dateLabel=new JLabel();
             dateLabel.setFont(new Font("Ink Free",Font.BOLD,30));
-    
+
+            //border logic goes here
+            Border border = dateLabel.getBorder();
+            Border margin = new EmptyBorder(20,20,0,20);
+            dateLabel.setBorder(new CompoundBorder(border,margin));
+            Border border2 = dayLabel.getBorder();
+            Border margin2 = new EmptyBorder(20,20,0,20);
+            dayLabel.setBorder(new CompoundBorder(border2,margin2));
+            Border border3 = timeLabel.getBorder();
+            Border margin3 = new EmptyBorder(20,20,0,20);
+            timeLabel.setBorder(new CompoundBorder(border3,margin3));
+            //all this I added myself - as well as change size.
+
     
             this.add(timeLabel);
             this.add(dayLabel);
             this.add(dateLabel);
+            this.add(button1224); //I added this! :)
+            this.add(buttonTimeZone); //and this.
             this.setVisible(true);
     
             setTimer();
@@ -70,11 +110,16 @@ public class SimpleClock extends JFrame implements Runnable{
             SimpleClock clock = new SimpleClock();
             Thread thread = new Thread(clock);
             thread.start();
+
+
+
         }
 
-
+    //this is from the Runnable interface
     @Override
     public void run() {
+
+
 
             do {
                 time = timeFormat.format(Calendar.getInstance().getTime());
@@ -91,7 +136,14 @@ public class SimpleClock extends JFrame implements Runnable{
                 } catch (Exception e) {
                     e.getStackTrace();
                 }
-                System.out.println("Logic in while loop goes here.");
+                System.out.println("Running...");
             } while (conditional);
+
+
+    }
+
+    //this is from the Actionlistener interface
+    @Override
+    public void actionPerformed(ActionEvent e) {
     }
 }
