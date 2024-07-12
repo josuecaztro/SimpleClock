@@ -9,20 +9,29 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.TimeZone;
 
 
 public class SimpleClock extends JFrame implements Runnable, ActionListener {
+    Date dateObj = new Date();
+
     static volatile boolean conditional = true;
     boolean hour24Format = false;
+    boolean gmtFormat = false;
 
     //Josue
         Calendar calendar;
         SimpleDateFormat timeFormat;
         SimpleDateFormat dayFormat;
         SimpleDateFormat dateFormat;
-    
+
+//        SimpleDateFormat gmtTimeFormat = new SimpleDateFormat("HH:mm:ss");
+//        gmtTimeFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
+
         JLabel timeLabel;
         JLabel dayLabel;
         JLabel dateLabel;
@@ -31,7 +40,7 @@ public class SimpleClock extends JFrame implements Runnable, ActionListener {
         String date;
         //I coded below here.
         JButton button1224 = new JButton("Switch 12/24HR");
-        JButton buttonTimeZone = new JButton("Toggle Time Zone");
+        JButton buttonTimeZone = new JButton("Switch Local/GMT");
 
 
 
@@ -44,7 +53,6 @@ public class SimpleClock extends JFrame implements Runnable, ActionListener {
             this.setResizable(true);
 
             button1224.addActionListener(e -> {
-                System.out.println("You pressed me.");
                 hour24Format = !hour24Format; // Toggle the format
 
                 if (hour24Format) {
@@ -59,6 +67,40 @@ public class SimpleClock extends JFrame implements Runnable, ActionListener {
             } else {
                 timeFormat = new SimpleDateFormat("hh:mm:ss a"); // 12-hour format
             }
+
+            buttonTimeZone.addActionListener(e -> {
+                gmtFormat = !gmtFormat;
+                System.out.println(gmtFormat);
+
+
+                if (gmtFormat) {
+                    timeFormat = new SimpleDateFormat("hh:mm:ss a");// 24-hour format
+                    timeFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
+                    time = timeFormat.format(dateObj);
+                }
+                else {
+                    timeFormat = new SimpleDateFormat("hh:mm:ss a");// 24-hour format
+//                    timeFormat.setTimeZone(TimeZone.getTimeZone("EST"));
+                    time = timeFormat.format(dateObj);
+                }
+            });
+
+            if (gmtFormat) {
+                timeFormat = new SimpleDateFormat("hh:mm:ss a");
+                timeFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
+                time = timeFormat.format(dateObj);
+            }
+            else {
+                timeFormat = new SimpleDateFormat("hh:mm:ss a");// 24-hour format
+//                timeFormat.setTimeZone(TimeZone.getTimeZone("EST"));
+                time = timeFormat.format(dateObj);
+            }
+
+            //testing gmt here
+//            SimpleDateFormat sdf = new SimpleDateFormat("hh:mm:ss a");
+//            sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
+//            System.out.println(sdf.format(dateObj));
+
             dayFormat=new SimpleDateFormat("EEEE");
             dateFormat=new SimpleDateFormat("dd MMMMM, yyyy");
             timeLabel = new JLabel();
@@ -136,7 +178,7 @@ public class SimpleClock extends JFrame implements Runnable, ActionListener {
                 } catch (Exception e) {
                     e.getStackTrace();
                 }
-                System.out.println("Running...");
+//                System.out.println("Running...");
             } while (conditional);
 
 
